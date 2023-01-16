@@ -107,6 +107,11 @@ function addRole() {
 }
 
 function addEmployee() {
+
+    const roles = db.query(`SELECT title FROM role;`);
+
+    const managers = db.query('SELECT first_name, last_name FROM employee;');
+
     inquirer.prompt([
         {
             name: 'new_first_name',
@@ -118,43 +123,26 @@ function addEmployee() {
             type: 'input',
             message: "Enter new employee's last name."
         },
-        ]).then((response) => {
-            db.query('INSERT INTO employee SET ?;', {
-            first_name: response.new_first_name,
-            last_name: response.new_last_name
-            });            
-            
-            const roles = db.query(`SELECT title FROM role;`);
-            return roles[0];
-        });
-    inquirer.prompt([
         {
             name: 'role',
             type: 'list',
             message: "New employee's role.",
             choices: roles
-        }
-    ]).then((response) => {
-        db.query('INSERT INTO employee SET ?;', {
-            role_id: response.role
-        });
-
-        const managers = db.query('SELECT first_name, last_name FROM employee;');
-        return managers[0];
-    });
-
-    inquirer.prompt([
+        },
         {
             name: 'manager',
             type: 'input',
             message: "Select employee's manager, if applicable.",
             choices: managers
         }
-    ]).then((response) => {
-        db.query('INSERT INTO employee SET ?;', {
+        ]).then((response) => {
+            db.query('INSERT INTO employee SET ?;', {
+            first_name: response.new_first_name,
+            last_name: response.new_last_name,
+            role_id: response.role,
             manager_id: response.manager
+            });                    
         });
-    });
     menu();
 };
         
