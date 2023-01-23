@@ -120,7 +120,7 @@ function addRole() {
             db.query('INSERT INTO role SET ?;', {
                 title: response.new_role,
                 salary: response.salary,
-                department: response.department
+                department_id: response.department
             });
             console.log('---------------')
             console.log('New role added!')
